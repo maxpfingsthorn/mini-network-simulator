@@ -73,3 +73,7 @@ If you want to detach from the docker container (exit will stop it), type `Ctrl-
 ## License
 
 This work is licensed under the [EUPL](https://joinup.ec.europa.eu/software/page/eupl), version 1.1 or - once approved - later versions.
+
+## Funding
+
+This work was supported in part by the European Community Horizon 2020 Programme under grant agreement n. 635491 "Dexterous ROV: effective dexterous ROV operations in presence of communication latencies (DexROV)".
