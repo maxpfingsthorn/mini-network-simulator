@@ -4,6 +4,8 @@ These scripts provide a very rudimentary network simulation using [Docker networ
 
 Multiple Docker bridge networks (the default type) can be connected with degradable links. Intuitively speaking, the networks are akin to virtual switches to plug it ethernet interface of containers in, and links between them are like network cables between the switches. Traffic shaping on these links with [netem](http://www.linuxfoundation.org/collaborate/workgroups/networking/netem) allows to simulate arbitrary WAN properties.
 
+![Diagram showing the connection between two Docker networks with mini-network-simulator](https://docs.google.com/drawings/d/1lHKbltTuKF3CBrbhcvuQ4sjK1DaGaT8HsbpzYyW-8nE/pub?w=781&amp;h=271)
+
 ## Tools
 
 The suite consist of four scripts:
