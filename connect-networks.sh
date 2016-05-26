@@ -62,7 +62,20 @@ if [[ "bridge" != "$(docker network inspect -f '{{.Driver}}' $net2)" ]]; then
 	exit 1
 fi
 
-info=$(ip link show label veth-$net1-$net2)
+function get_iface_name {
+	net1="$1"
+	net2="$2"
+
+	id1=$(docker network inspect -f '{{.ID}}' $net1)
+	id2=$(docker network inspect -f '{{.ID}}' $net2)
+
+	echo vth${id1: -6}${id2: -6}
+}
+
+veth12=$(get_iface_name $net1 $net2)
+veth21=$(get_iface_name $net2 $net1)
+
+info=$(ip link show label ${veth12})
 if [ -n "$info" ]; then
 	echo "networks $net1 and $net2 seem to be connected already"
 	exit 0
@@ -85,15 +98,7 @@ function get_bridge_name {
 	return 0
 }
 
-function get_iface_name {
-	net1="$1"
-	net2="$2"
 
-	id1=$(docker network inspect -f '{{.ID}}' $net1)
-	id2=$(docker network inspect -f '{{.ID}}' $net2)
-
-	echo vth${id1: -6}${id2: -6}
-}
 
 br1=$(get_bridge_name $net1)
 br2=$(get_bridge_name $net2)
@@ -111,8 +116,6 @@ fi
 #echo "br1: " $br1
 #echo "br2: " $br2
 
-veth12=$(get_iface_name $net1 $net2)
-veth21=$(get_iface_name $net2 $net1)
 
 # add virtual ethernet interfaces
 if ip link add ${veth12} type veth peer name ${veth21}; then
