@@ -15,6 +15,8 @@ The suite consist of four scripts:
 - `update-routes-and-hosts.sh` allows to automatically set ip routes and write hostnames of other connected containers to /etc/hosts of each container.
 - `degrade-link.sh` allows to set netem parameters (bandwidth limit, packet delay, loss, duplication, corruption) on a link between two networks. This is directed, the order of networks matters here to allow setting different parameters for each direction (e.g. different bandwidth limit).
 
+All scripts will output verbose help when invoked with the `-h` flag.
+
 ## Note
 
 All of these will probably have to be run with sudo, unless your user is allowed to add network interfaces with `ip link add`.
@@ -25,7 +27,9 @@ All of these will probably have to be run with sudo, unless your user is allowed
 
 - Docker > 1.10
 - Bash > 4.0
-- nsenter >= 2.26 (from util-linux package or [jpetazzo's build](https://github.com/jpetazzo/nsenter#how-do-i-install-nsenter-with-this) )
+- nsenter >= 2.26 (from util-linux package for Ubuntu >= 15.10 and other modern distributions or [jpetazzo's build](https://github.com/jpetazzo/nsenter#how-do-i-install-nsenter-with-this) )
+
+The scripts have been tested on Ubuntu 12.04 and 14.04 (with nsenter from jpetazzo) as well as 16.04 (with nsenter from util-linux).
 
 ## Example
 
@@ -72,7 +76,7 @@ If you want to detach from the docker container (exit will stop it), type `Ctrl-
 
 ## License
 
-This work is licensed under the [EUPL](https://joinup.ec.europa.eu/software/page/eupl), version 1.1 or - once approved - later versions.
+This work is licensed under the [EUPL](https://joinup.ec.europa.eu/software/page/eupl), version 1.1 or - once approved by the EC - later versions.
 
 ## Funding
 
