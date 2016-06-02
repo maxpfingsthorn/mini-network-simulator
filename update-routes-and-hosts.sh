@@ -149,6 +149,7 @@ function find_connected_nets_and_hosts {
 			if [ -z "$connected_nets" ]; then
 				# initialize component of first network
 				components_by_net["$net"]=0
+				#echo "init component 0 with $net"
 			else
 				# find corresponding component, or make new component
 				components_by_net["$net"]=-1
@@ -163,12 +164,16 @@ function find_connected_nets_and_hosts {
 						if [[ -1 == ${components_by_net["$net"]} ]]; then
 							# we don't have a component yet, assign theirs
 							components_by_net["$net"]=${components_by_net["$net2"]}
+							#echo "part of component ${components_by_net["$net2"]}"
 						elif [[ ${components_by_net["$net"]} != ${components_by_net["$net2"]} ]]; then
 							# we already have a different component, merge theirs to ours
 							old_comp=${components_by_net["$net2"]}
 
+							#echo "merging components (mine) ${components_by_net["$net"]} (theirs) ${components_by_net["$net2"]}"
+
 							for netname in ${!components_by_net[@]}; do
 								if [[ $old_comp == ${components_by_net["$netname"]} ]]; then
+									#echo "set component of net $netname from ${components_by_net["$netname"]} to ${components_by_net["$net"]}"
 									components_by_net["$netname"]=${components_by_net["$net"]}
 								fi
 							done
@@ -183,6 +188,7 @@ function find_connected_nets_and_hosts {
 
 					let nextcomp=$max+1
 					components_by_net["$net"]=$nextcomp
+					#echo "made new component for net $net : $nextcomp"
 				fi
 			fi
 
@@ -194,16 +200,19 @@ function find_connected_nets_and_hosts {
 	# construct network neighborhoods
 	IFS=$'\n' unique_comps=$(echo "${components_by_net[*]}" | sort -nu)
 	unset IFS
-	#echo "unique components: $unique_comps"
+	#echo "unique components: '$unique_comps'"
 
 	for c in $unique_comps; do
-		declare -a neighborhood
+		neighborhood=()
+
+		#echo "Component: $c"
 
 		for net in ${!components_by_net[@]}; do
 			net=$(echo $net | sed 's/^\s*\(.*[^ \t]\)\(\s\+\)*$/\1/' )
 
 			if [[ $c == ${components_by_net["$net"]} ]]; then
 				neighborhood+=("$net")
+				#echo "added $net"
 			fi
 		done
 
