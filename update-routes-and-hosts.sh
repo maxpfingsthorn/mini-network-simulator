@@ -354,7 +354,9 @@ for cid in $(docker ps -q); do
 
 		# clean up old hostnames
 		${nsenter} -t $pid --mount -- cat /etc/hosts | sed "/$start_tag/,/$end_tag/d" | ${nsenter} -t $pid --mount -- tee /etc/hosts.cleaned > /dev/null
-		${nsenter} -t $pid --mount -- mv /etc/hosts.cleaned /etc/hosts
+		# /etc/hosts cannot be renamed or overwritten in Docker containers, see https://github.com/moby/moby/issues/9295
+		${nsenter} -t $pid --mount -- cat /etc/hosts.cleaned | ${nsenter} -t $pid --mount -- tee /etc/hosts > /dev/null
+		${nsenter} -t $pid --mount -- rm /etc/hosts.cleaned > /dev/null
 
 		for n in ${networks[@]}; do
 			IFS=' ' read -r -a hosts <<< "${extra_hosts_by_net["$n"]}"
